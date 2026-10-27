@@ -1,0 +1,62 @@
+{
+  "shackleton_rim/SUN": {
+    "n_times": 8760,
+    "A_vs_B_max_direction_diff_arcsec": 0.006147170253011476,
+    "A_vs_Horizons_max_direction_diff_arcsec": 0.005323605600495954,
+    "A_vs_Horizons_max_elevation_diff_arcsec": 0.0018664532415613166,
+    "A_vs_Horizons_max_range_diff_km": 0.004921287298202515,
+    "elevation_min_deg": -1.6254312674496285,
+    "elevation_max_deg": 1.6257951981895167,
+    "fraction_above_flat_horizon": 0.5061643835616438
+  },
+  "shackleton_rim/EARTH": {
+    "n_times": 8760,
+    "A_vs_B_max_direction_diff_arcsec": 0.005323605600495954,
+    "A_vs_Horizons_max_direction_diff_arcsec": 0.006147170253011476,
+    "A_vs_Horizons_max_elevation_diff_arcsec": 0.002063210746250377,
+    "A_vs_Horizons_max_range_diff_km": 0.004154473019298166,
+    "elevation_min_deg": -6.995739637391212,
+    "elevation_max_deg": 6.671485933486901,
+    "fraction_above_flat_horizon": 0.47614155251141554
+  },
+  "malapert/SUN": {
+    "n_times": 8760,
+    "A_vs_B_max_direction_diff_arcsec": 0.006147170253011476,
+    "A_vs_Horizons_max_direction_diff_arcsec": 0.005323605600495954,
+    "A_vs_Horizons_max_elevation_diff_arcsec": 0.001991488094432725,
+    "A_vs_Horizons_max_range_diff_km": 0.004920661449432373,
+    "elevation_min_deg": -5.524753161494215,
+    "elevation_max_deg": 5.516779972706391,
+    "fraction_above_flat_horizon": 0.48732876712328765
+  },
+  "malapert/EARTH": {
+    "n_times": 8760,
+    "A_vs_B_max_direction_diff_arcsec": 0.005323605600495954,
+    "A_vs_Horizons_max_direction_diff_arcsec": 0.005323605600495954,
+    "A_vs_Horizons_max_elevation_diff_arcsec": 0.0020487570647986786,
+    "A_vs_Horizons_max_range_diff_km": 0.004154526977799833,
+    "elevation_min_deg": -3.109921783719725,
+    "elevation_max_deg": 10.508643281895694,
+    "fraction_above_flat_horizon": 0.6756849315068493
+  },
+  "apollo11/SUN": {
+    "n_times": 8760,
+    "A_vs_B_max_direction_diff_arcsec": 0.005323605600495954,
+    "A_vs_Horizons_max_direction_diff_arcsec": 0.005323605600495954,
+    "A_vs_Horizons_max_elevation_diff_arcsec": 0.0027127449678587823,
+    "A_vs_Horizons_max_range_diff_km": 0.004914402961730957,
+    "elevation_min_deg": -89.86078650846866,
+    "elevation_max_deg": 89.76810933001529,
+    "fraction_above_flat_horizon": 0.48595890410958903
+  },
+  "apollo11/EARTH": {
+    "n_times": 8760,
+    "A_vs_B_max_direction_diff_arcsec": 0.00434670577101264,
+    "A_vs_Horizons_max_direction_diff_arcsec": 0.00434670577101264,
+    "A_vs_Horizons_max_elevation_diff_arcsec": 0.0037410881304822396,
+    "A_vs_Horizons_max_range_diff_km": 0.0041384275536984205,
+    "elevation_min_deg": 57.963834905470904,
+    "elevation_max_deg": 73.17029583939663,
+    "fraction_above_flat_horizon": 1.0
+  }
+}
