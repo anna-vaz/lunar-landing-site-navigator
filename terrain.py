@@ -114,6 +114,68 @@ class PolarDEM:
         return self.height_pix(r, c)
 
 
+class GlobalDEM:
+    """Global LOLA elevation map in simple cylindrical projection (e.g. LDEM_64: 64 pixels
+    per degree, ~474 m). Rows run from 90N down, columns from 0E eastward; pixel centres at
+    (90 - lat) * res - 0.5 and lon * res - 0.5 (checked against LDEM_16 in step4a)."""
+
+    def __init__(self, name: str = "ldem_64"):
+        lbl = read_pds_label(DATA / f"{name}.lbl")
+        self.name = name
+        self.n_lines = int(lbl["LINES"])
+        self.n_samples = int(lbl["LINE_SAMPLES"])
+        self.res = float(lbl["MAP_RESOLUTION"])       # pixels per degree
+        self.scale = float(lbl["MAP_SCALE"])          # m / pixel at the equator
+        self.dn_scale = float(lbl["SCALING_FACTOR"])
+        self.dn = np.memmap(DATA / f"{name}.img", dtype="<i2", mode="r",
+                            shape=(self.n_lines, self.n_samples))
+
+    def height(self, lat_deg, lon_deg):
+        lat = np.asarray(lat_deg, float)
+        lon = np.asarray(lon_deg, float) % 360.0
+        row = np.clip((90.0 - lat) * self.res - 0.5, 0, self.n_lines - 1.001)
+        col = lon * self.res - 0.5
+        r0 = np.floor(row).astype(np.int64)
+        c0 = np.floor(col).astype(np.int64)
+        fr, fc = row - r0, col - c0
+        c1 = (c0 + 1) % self.n_samples
+        c0 = c0 % self.n_samples
+        d = self.dn
+        h = ((1 - fr) * ((1 - fc) * d[r0, c0] + fc * d[r0, c1])
+             + fr * ((1 - fc) * d[r0 + 1, c0] + fc * d[r0 + 1, c1]))
+        return h * self.dn_scale
+
+    def scale_at(self, lat_deg):
+        return self.scale
+
+
+class CompositeDEM:
+    """Best available terrain everywhere: the 40 m south-polar map south of 80.2 S, the
+    global 474 m map elsewhere. This lets rays from a site at 82 S, say, run north off the
+    polar map without losing terrain."""
+
+    def __init__(self, polar: PolarDEM | None = None, glob: GlobalDEM | None = None):
+        self.polar = polar or PolarDEM()
+        self.glob = glob or GlobalDEM()
+        self.scale = self.polar.scale
+
+    def height(self, lat_deg, lon_deg):
+        lat = np.asarray(lat_deg, float)
+        lon = np.asarray(lon_deg, float)
+        out = np.full(np.broadcast(lat, lon).shape, np.nan)
+        lat_b, lon_b = np.broadcast_arrays(lat, lon)
+        polar = lat_b <= -80.2
+        if polar.any():
+            out[polar] = self.polar.height(lat_b[polar], lon_b[polar])
+        rest = ~np.isfinite(out)
+        if rest.any():
+            out[rest] = self.glob.height(lat_b[rest], lon_b[rest])
+        return out
+
+    def scale_at(self, lat_deg):
+        return self.polar.scale if lat_deg <= -80.5 else self.glob.scale
+
+
 def unit_vector(lat_deg, lon_deg):
     la, lo = np.radians(lat_deg), np.radians(lon_deg)
     return np.stack([np.cos(la) * np.cos(lo), np.cos(la) * np.sin(lo), np.sin(la)], axis=-1)
@@ -141,7 +203,7 @@ def ray_distances(pixel_m: float, max_m: float) -> np.ndarray:
     return np.concatenate([near, np.array(far)])
 
 
-def horizon_profile(dem: PolarDEM, lat_deg, lon_deg, obs_height_m=2.0, n_az=720,
+def horizon_profile(dem, lat_deg, lon_deg, obs_height_m=2.0, n_az=720,
                     max_dist_m=350e3, min_dist_m=0.0):
     """Terrain horizon elevation (deg) for n_az azimuths 0..360 (deg from north, eastward).
 
@@ -149,10 +211,11 @@ def horizon_profile(dem: PolarDEM, lat_deg, lon_deg, obs_height_m=2.0, n_az=720,
     Returns (az_deg, horizon_deg, site_height_m).
     """
     az = np.arange(n_az) * 360.0 / n_az
-    h_site = float(dem.height(lat_deg, lon_deg))
+    h_site = float(np.asarray(dem.height(lat_deg, lon_deg)).item())
     up = unit_vector(lat_deg, lon_deg)
     P = (R_MOON_M + h_site + obs_height_m) * up
-    d = ray_distances(dem.scale, max_dist_m)
+    pixel = dem.scale_at(lat_deg) if hasattr(dem, "scale_at") else dem.scale
+    d = ray_distances(pixel, max_dist_m)
     d = d[d >= min_dist_m]
     lat2, lon2 = destination(lat_deg, lon_deg, az, d)            # (n_az, n_d)
     h = dem.height(lat2, lon2)

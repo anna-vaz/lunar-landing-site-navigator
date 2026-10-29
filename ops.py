@@ -143,20 +143,25 @@ class SiteTimeline:
 
     def __init__(self, lat, lon, start_utc, stop_utc, step_h=1.0, mast_m=2.0, dem=None,
                  array: SolarArray | None = None, link: RadioLink | None = None,
-                 horizon=None):
+                 horizon=None, vectors=None):
         self.lat, self.lon, self.mast_m = lat, lon, mast_m
         self.array = array or SolarArray()
         self.link = link or RadioLink()
         self.ets = ms.time_grid(start_utc, stop_utc, step_h)
+        self._vectors = vectors or {}          # optional precomputed Sun/Earth vectors
         if horizon is None:
-            dem = dem or tr.PolarDEM()
+            dem = dem or tr.CompositeDEM()
             self.az_h, self.hor, self.ground_m = tr.horizon_profile(dem, lat, lon, mast_m)
         else:
             self.az_h, self.hor, self.ground_m = horizon
         self._compute()
 
     def _sky(self, target, ets):
-        v = ms.target_vectors_from_moon_center(target, ets)
+        pre = self._vectors.get(target)
+        if pre is not None and len(pre) == len(ets) and ets is self.ets:
+            v = pre                     # precomputed for exactly this time grid
+        else:
+            v = ms.target_vectors_from_moon_center(target, ets)
         az, el, rng = ms.sky_from_vectors(v, self.lat, self.lon, (self.ground_m + self.mast_m) / 1e3)
         rad = np.degrees(np.arcsin(ms.TARGET_RADIUS_KM[target] / rng))
         h = tr.horizon_at(self.az_h, self.hor, az)

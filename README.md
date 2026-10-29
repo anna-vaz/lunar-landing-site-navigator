@@ -7,7 +7,7 @@ Compare candidate landing sites near the lunar south pole: when is each site in 
 - [x] **Block 1: Sun and Earth in the lunar sky** (`moon_sky.py`): validated against JPL Horizons
 - [x] **Block 2: local horizon from LRO/LOLA terrain** (`terrain.py`): validated against NASA's illumination maps
 - [x] **Block 3: solar power, Earth link budget, windows and time until sunset/Earthset** (`ops.py`)
-- [ ] Block 4: app (Python)
+- [x] **Block 4: the app** (`app.py`, Streamlit): curated sites, sky view, timeline, best landing dates, move-the-site grid, maps
 - [ ] Block 5: pitch
 
 ## Setup
@@ -22,7 +22,12 @@ python step2a_terrain_checks.py # block 2 internal checks
 python step2b_validate_vs_nasa.py  # block 2 vs NASA's 18.6-year illumination maps (~1 min)
 python step2c_site_demo.py      # example site figure
 python step3_power_comms.py     # block 3 checks + timeline figure
+python step4a_global_terrain.py # global terrain checks + all curated sites
+python test_app.py              # app smoke test (runs it headless)
+streamlit run app.py            # the app, in your browser
 ```
+`download_terrain.py` also needs the global map `ldem_64` (531 MB) for sites away from the pole:
+it is downloaded the same way from the PDS `cylindrical/img/` folder.
 
 ## Block 1: how it works
 `moon_sky.sky_positions(target, lat, lon, times)` returns the azimuth, elevation and distance of
@@ -97,8 +102,8 @@ comparison above ignores the closest 60 m; the app uses a 2 m mast (a lander's s
 - Over flat ground at this latitude, the Sun's disc would be visible 57 % of 2027. On this
   2 km high ridge it is visible **91 %** from a 2 m mast, and **96 %** from 10 m. Height
   also lowers the horizon: the ground falls away, so the Sun stays visible even at −2°.
-- Earth is visible 55 % of the year, and only in a narrow window to the north-east (az ≈ 135°)
-  when the Moon's wobble lifts it up.
+- Earth is visible 55 % of the year, always low in the south-east (az ≈ 137°, the direction
+  across the pole towards the near side), and only when the Moon's wobble lifts it up.
 - Darkest lunar day of 2027 (from 21 April): the Sun is visible only 60 % of the time.
 
 ## Block 3: power, communication, and "how long until sunset?"
@@ -138,3 +143,39 @@ to the minute.
 - Ground-station side: assumes some station on Earth can see the Moon (true for most of the
   time with three stations spread around the globe), and no weather or scheduling.
 - No thermal model yet.
+
+## Block 4: the app
+`streamlit run app.py` opens the Lunar Landing Site Navigator in the browser. It runs fully
+offline once `data/` and `kernels/` are downloaded.
+
+![top](figures/app/01_top.png)
+
+- **Sidebar:** up to 4 sites from a curated list (`sites.py`: Apollo 11–17, IM-1, IM-2,
+  Chandrayaan-3, SLIM, Blue Ghost, Chang'e 4/5/6, the brightest south-pole ridge, Shackleton's
+  shadowed floor) or your own coordinates; landing date and time; look-ahead period; mast height;
+  panel and radio assumptions.
+- **At landing:** for each site, whether the Sun and Earth are up and **how long until sunset /
+  Earthset** (or sunrise / Earthrise).
+- **Comparison table:** sunlight, Earth visibility, both together, mean power, longest darkness,
+  battery needed to survive it, longest radio silence.
+- **Sky view:** the skyline with the Sun's and Earth's paths; hidden parts in pale colours.
+- **Timeline:** when the Sun and Earth are visible, solar power, maximum downlink rate.
+- **Best landing dates:** for every landing day in the next year, how much sunlight and Earth
+  contact a mission of N days gets. Answers "the launch slipped two weeks, now what?"
+- **Move the site:** 9 × 9 grid of sunlight / Earth visibility around a site (100 m – 2 km
+  spacing): small moves, big changes.
+- **Map:** south-pole relief and a whole-Moon map with the sites.
+
+### Global terrain checks (step4a)
+| Check | Result |
+|---|---|
+| Global 474 m map vs the separate global 1.9 km map | correlation 0.9997 |
+| Global 474 m map vs the polar 40 m map, 80.5–87°S | correlation 0.99998, rms 12 m |
+| Composite terrain vs polar-only, near the pole | identical horizon |
+
+Headline numbers for 2027 (2 m mast) for all curated sites are in `results/step4a_global.json`.
+Sanity checks that come out right: Earth is never visible from the far-side Chang'e 4 and 6
+sites (they needed a relay satellite) and always visible from the near-side sites; the Shackleton
+floor never sees the Sun; and at Chandrayaan-3's site the tool puts sunrise on 21 Aug 2023 and
+sunset on 4 Sep 2023 (ISRO landed on 23 Aug at the start of the lunar day and put the lander to
+sleep on 4 Sep).
