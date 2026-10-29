@@ -17,7 +17,7 @@ py -3.14 -m venv .venv
 pip install -r requirements.txt
 python download_kernels.py      # NASA/JPL SPICE data, ~45 MB
 python step1_validate.py        # block 1 check against JPL Horizons
-python download_terrain.py      # LOLA terrain + NASA illumination maps, ~0.6 GB
+python download_terrain.py      # LOLA terrain + NASA illumination maps, ~1.1 GB
 python step2a_terrain_checks.py # block 2 internal checks
 python step2b_validate_vs_nasa.py  # block 2 vs NASA's 18.6-year illumination maps (~1 min)
 python step2c_site_demo.py      # example site figure
@@ -26,8 +26,7 @@ python step4a_global_terrain.py # global terrain checks + all curated sites
 python test_app.py              # app smoke test (runs it headless)
 streamlit run app.py            # the app, in your browser
 ```
-`download_terrain.py` also needs the global map `ldem_64` (531 MB) for sites away from the pole:
-it is downloaded the same way from the PDS `cylindrical/img/` folder.
+On Windows, double-click `run_app.bat` to start the app.
 
 ## Block 1: how it works
 `moon_sky.sky_positions(target, lat, lon, times)` returns the azimuth, elevation and distance of
