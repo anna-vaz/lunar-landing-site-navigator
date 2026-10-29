@@ -6,7 +6,7 @@ Compare candidate landing sites near the lunar south pole: when is each site in 
 ## Status
 - [x] **Block 1: Sun and Earth in the lunar sky** (`moon_sky.py`): validated against JPL Horizons
 - [x] **Block 2: local horizon from LRO/LOLA terrain** (`terrain.py`): validated against NASA's illumination maps
-- [ ] Block 3: solar power and Earth link budget
+- [x] **Block 3: solar power, Earth link budget, windows and time until sunset/Earthset** (`ops.py`)
 - [ ] Block 4: app (Python)
 - [ ] Block 5: pitch
 
@@ -21,6 +21,7 @@ python download_terrain.py      # LOLA terrain + NASA illumination maps, ~0.6 GB
 python step2a_terrain_checks.py # block 2 internal checks
 python step2b_validate_vs_nasa.py  # block 2 vs NASA's 18.6-year illumination maps (~1 min)
 python step2c_site_demo.py      # example site figure
+python step3_power_comms.py     # block 3 checks + timeline figure
 ```
 
 ## Block 1: how it works
@@ -99,3 +100,41 @@ comparison above ignores the closest 60 m; the app uses a 2 m mast (a lander's s
 - Earth is visible 55 % of the year, and only in a narrow window to the north-east (az ≈ 135°)
   when the Moon's wobble lifts it up.
 - Darkest lunar day of 2027 (from 21 April): the Sun is visible only 60 % of the time.
+
+## Block 3: power, communication, and "how long until sunset?"
+`ops.SiteTimeline(lat, lon, start, stop)` combines blocks 1 and 2 for one site and returns, hour
+by hour: how much of the Sun's disc clears the terrain, solar-array power, whether Earth's
+centre clears the terrain (radio contact), and the maximum downlink rate. `summary()` gives
+the headline numbers, and `time_until_change(t)` answers "the Sun is up; when does it set?"
+to the minute.
+
+**Default assumptions** (editable in the app):
+- **Solar array:** 1 m², 30 % efficient cells, vertical panel turned towards the Sun (polar
+  landers), or a flat deck panel (equatorial landers). Sunlight 1361 W/m² × (1 AU / distance)².
+- **Radio:** X-band (8.45 GHz), 10 W transmitter, 0.3 m dish on the lander, a 12 m class
+  ground station (G/T 37 dB/K; NASA's 34 m dishes are about 53 dB/K), coded link needing
+  Eb/N0 = 2.5 dB, plus a 3 dB margin. The result is the rate the link can carry; a real radio
+  may cap it lower.
+
+### Checks
+| Check | Result |
+|---|---|
+| Partly hidden Sun: segment-area formula vs 400,000 random points in the disc | max difference 0.0009 (the counting noise) |
+| Flat panel at Apollo 11 over 12 lunar days vs hand formula S·A·η·cos(lat)/π | 129.56 W vs 129.83 W (−0.2 %; the formula ignores the Sun's ±1.5° tilt and the disc crossing the horizon) |
+| Link budget in dB vs the same link in plain SI units (Friis) | identical (10.7 Mbit/s at 384,400 km) |
+| Time until sunset/sunrise: search + refinement vs scanning every minute, 8 random moments | identical; this checks the window-search logic, at 1 minute resolution |
+
+### Example: the ridge between Shackleton and de Gerlache craters, 2027
+![timeline](figures/step3_ridge_timeline.png)
+
+- Sun visible 91 % of the year; a 1 m² array averages 354 W (≈400 W when fully lit).
+- Longest darkness: 121 h (5 days). Surviving it on a 50 W heater/computer load needs a 6 kWh
+  battery.
+- Earth in view 51 % of the year, but the longest radio silence is 318 h (13 days): the dark
+  side of the Moon's monthly nod. Sun **and** Earth together: 47 %.
+
+### Known limits
+- Hourly steps: a Sun peeking through a gap for less than an hour can be missed.
+- Ground-station side: assumes some station on Earth can see the Moon (true for most of the
+  time with three stations spread around the globe), and no weather or scheduling.
+- No thermal model yet.
