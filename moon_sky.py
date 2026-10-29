@@ -127,6 +127,34 @@ def sky_positions_spice_azl(target: str, lat_deg: float, lon_deg: float, ets, he
     return out[:, 0], out[:, 1], out[:, 2]
 
 
+TARGET_RADIUS_KM = {"SUN": 695700.0, "EARTH": 6371.0}
+
+
+def target_vectors_from_moon_center(target: str, ets) -> np.ndarray:
+    """Apparent target position seen from the Moon's centre, MOON_ME frame, km (n, 3).
+    Computed once and reused for many sites (fast path for long time spans)."""
+    load_kernels()
+    ets = np.atleast_1d(np.asarray(ets, dtype=float))
+    pos, _lt = sp.spkpos(target, ets, FRAME, "LT+S", "MOON")
+    return np.asarray(pos)
+
+
+def sky_from_vectors(target_vecs: np.ndarray, lat_deg, lon_deg, height_km=0.0):
+    """Azimuth, elevation (deg), range (km) for one site from precomputed centre vectors.
+
+    The site sits ~1737 km from the Moon's centre, so we subtract its position (this is the
+    parallax: up to 0.26 deg for Earth, negligible for the Sun). The tiny difference in
+    light time between the centre and the site (~6 ms) is ignored; step2_validate.py checks
+    that this agrees with the exact sky_positions().
+    """
+    v = target_vecs - site_position(lat_deg, lon_deg, height_km)[None, :]
+    enu = v @ enu_matrix(lat_deg, lon_deg).T
+    rng = np.linalg.norm(enu, axis=1)
+    el = np.degrees(np.arcsin(enu[:, 2] / rng))
+    az = np.degrees(np.arctan2(enu[:, 0], enu[:, 1])) % 360.0
+    return az, el, rng
+
+
 def et_to_utc(ets, prec: int = 0):
     load_kernels()
     return [sp.et2utc(float(e), "ISOC", prec) for e in np.atleast_1d(ets)]

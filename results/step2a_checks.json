@@ -1,0 +1,67 @@
+{
+  "projection_check": {
+    "SX=+1,SY=+1": {
+      "corr": -0.198110170013089,
+      "rms_m": 2850.618503071353
+    },
+    "SX=+1,SY=-1": {
+      "corr": 0.9994278779878106,
+      "rms_m": 63.140130776115996
+    },
+    "SX=-1,SY=+1": {
+      "corr": -0.2988405387986348,
+      "rms_m": 2968.0309103478207
+    },
+    "SX=-1,SY=-1": {
+      "corr": 0.20084393253596391,
+      "rms_m": 2328.1338332786345
+    }
+  },
+  "roundtrip_max_err_deg": 5.684341886080802e-14,
+  "horizon_check": {
+    "Near Shackleton rim": {
+      "site_height_m": 629.3927739593573,
+      "far_mean_diff_deg": -0.012773244268645218,
+      "far_p95_abs_diff_deg": 0.076788282151794,
+      "far_max_abs_diff_deg": 0.25171722336727154,
+      "slope_deg": 23.39087621091289,
+      "uphill_az_deg": 134.59335296033515,
+      "near_max_horizon_deg": 26.034556941775865,
+      "near_max_az_deg": 128.0
+    },
+    "Malapert massif (approx.)": {
+      "site_height_m": 5109.874519038712,
+      "far_mean_diff_deg": -0.022173507258181693,
+      "far_p95_abs_diff_deg": 0.06808128661250759,
+      "far_max_abs_diff_deg": 0.11002396467613362,
+      "slope_deg": 4.674116856974054,
+      "uphill_az_deg": 270.1465952294014,
+      "near_max_horizon_deg": 8.794667499488424,
+      "near_max_az_deg": 292.5
+    },
+    "Haworth crater floor (approx.)": {
+      "site_height_m": -3374.2167036207657,
+      "far_mean_diff_deg": -0.02162351599375104,
+      "far_p95_abs_diff_deg": 0.04923583541485783,
+      "far_max_abs_diff_deg": 0.0962286253341853,
+      "slope_deg": 2.8785420653802376,
+      "uphill_az_deg": 207.06680745118652,
+      "near_max_horizon_deg": 3.9724984567255412,
+      "near_max_az_deg": 211.5
+    }
+  },
+  "smooth_sphere_check": {
+    "2 m": {
+      "exact_deg": -0.08693657193373108,
+      "max_err_deg": 8.980836252447943e-08
+    },
+    "100 m": {
+      "exact_deg": -0.6147199481911103,
+      "max_err_deg": 1.3749884686387048e-06
+    },
+    "1000 m": {
+      "exact_deg": -1.943495746452586,
+      "max_err_deg": 3.2427488911856983e-06
+    }
+  }
+}
