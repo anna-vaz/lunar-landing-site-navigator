@@ -388,9 +388,13 @@ with tab_move:
         c1, c2 = st.columns(2)
         for colw, z, title, scale in ((c1, sun, "Sun visible (%)", "YlOrBr_r"),
                                       (c2, earth, "Earth visible (%)", "Blues_r")):
+            what = "Sun" if "Sun" in title else "Earth"
             fh = go.Figure(go.Heatmap(z=z, x=offs, y=offs[::-1], colorscale=scale,
                                       zmin=0, zmax=100, text=np.round(z).astype(int),
-                                      texttemplate="%{text}", colorbar=dict(title="%")))
+                                      texttemplate="%{text}", colorbar=dict(title="%"),
+                                      hovertemplate=("%{y:.0f} m north, %{x:.0f} m east"
+                                                     f"<br>{what} visible %{{z:.0f}} %"
+                                                     "<extra></extra>")))
             fh.add_trace(go.Scatter(x=[0], y=[0], mode="markers",
                                     marker=dict(symbol="x", size=14, color="red"),
                                     name="site", showlegend=False))
