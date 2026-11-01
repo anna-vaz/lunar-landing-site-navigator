@@ -1,0 +1,50 @@
+{
+ "Ridge between Shackleton and de Gerlache craters | planned 7 Nov 2026 (2026-11-07T10:00..2026-11-21T10:00)": {
+  "sun_visible_pct": 100.0,
+  "earth_visible_pct": 34.9,
+  "sun_and_earth_pct": 34.9,
+  "longest_dark_h": 0.0,
+  "longest_no_earth_h": 218.8,
+  "mean_power_w": 417.8
+ },
+ "Ridge between Shackleton and de Gerlache craters | best day 15 Nov 2026 (2026-11-15T10:00..2026-11-29T10:00)": {
+  "sun_visible_pct": 100.0,
+  "earth_visible_pct": 92.0,
+  "sun_and_earth_pct": 92.0,
+  "longest_dark_h": 0.0,
+  "longest_no_earth_h": 26.8,
+  "mean_power_w": 417.3
+ },
+ "Ridge between Shackleton and de Gerlache craters | slipped to 21 Nov 2026 (2026-11-21T10:00..2026-12-05T10:00)": {
+  "sun_visible_pct": 100.0,
+  "earth_visible_pct": 63.1,
+  "sun_and_earth_pct": 63.1,
+  "longest_dark_h": 0.0,
+  "longest_no_earth_h": 123.8,
+  "mean_power_w": 418.5
+ },
+ "IM-2 Athena (Mons Mouton), landed 2025 | planned 7 Nov 2026 (2026-11-07T10:00..2026-11-21T10:00)": {
+  "sun_visible_pct": 44.8,
+  "earth_visible_pct": 64.9,
+  "sun_and_earth_pct": 44.8,
+  "longest_dark_h": 185.5,
+  "longest_no_earth_h": 117.8,
+  "mean_power_w": 179.9
+ },
+ "IM-2 Athena (Mons Mouton), landed 2025 | best day 15 Nov 2026 (2026-11-15T10:00..2026-11-29T10:00)": {
+  "sun_visible_pct": 100.0,
+  "earth_visible_pct": 100.0,
+  "sun_and_earth_pct": 100.0,
+  "longest_dark_h": 0.0,
+  "longest_no_earth_h": 0.0,
+  "mean_power_w": 413.7
+ },
+ "IM-2 Athena (Mons Mouton), landed 2025 | slipped to 21 Nov 2026 (2026-11-21T10:00..2026-12-05T10:00)": {
+  "sun_visible_pct": 68.6,
+  "earth_visible_pct": 92.5,
+  "sun_and_earth_pct": 68.6,
+  "longest_dark_h": 105.2,
+  "longest_no_earth_h": 25.0,
+  "mean_power_w": 279.9
+ }
+}

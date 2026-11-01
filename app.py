@@ -85,6 +85,25 @@ def global_relief():
 
 
 @st.cache_data(show_spinner=False)
+def terrain_patch(lat, lon, half_km, n=121):
+    """Terrain around a site on a local east/north grid (km), heights relative to the site
+    in m, including the drop due to the Moon's curvature (d^2 / 2R)."""
+    ax_km = np.linspace(-half_km, half_km, n)
+    E, N = np.meshgrid(ax_km, ax_km)
+    dist = np.hypot(E, N) * 1000.0
+    az = np.degrees(np.arctan2(E, N))
+    la = np.empty(dist.size)
+    lo = np.empty(dist.size)
+    for k, (a_, d_) in enumerate(zip(az.ravel(), dist.ravel())):
+        la2, lo2 = tr.destination(lat, lon, [a_], [d_])
+        la[k], lo[k] = la2.item(), lo2.item()
+    h = get_dem().height(la, lo).reshape(E.shape)
+    h0 = float(np.asarray(get_dem().height(lat, lon)).item())
+    z = h - h0 - dist ** 2 / (2 * tr.R_MOON_M)
+    return ax_km, z
+
+
+@st.cache_data(show_spinner=False)
 def neighbourhood_scan(lat, lon, mast_m, start_utc, stop_utc, step_h, spacing_m, n):
     """Sunlit and Earth-visible % on an n x n grid around a site (n_az reduced for speed)."""
     ets, vec = get_vectors(start_utc, stop_utc, step_h)
@@ -251,9 +270,9 @@ for s, tl in zip(sel, tls):
     })
 st.dataframe(pd.DataFrame(rows).set_index("Site"), width="stretch")
 
-tab_sky, tab_time, tab_dates, tab_move, tab_map, tab_about = st.tabs(
-    ["🔭 Sky view", "📈 Timeline", "📅 Best landing dates", "🧭 Move the site", "🗺️ Map",
-     "ℹ️ How it works"])
+tab_sky, tab_3d, tab_time, tab_dates, tab_move, tab_map, tab_about = st.tabs(
+    ["🔭 Sky view", "🏔️ 3D terrain", "📈 Timeline", "📅 Best landing dates",
+     "🧭 Move the site", "🗺️ Map", "ℹ️ How it works"])
 
 # ---------------- sky view ----------------
 with tab_sky:
@@ -289,7 +308,8 @@ with tab_sky:
                                              line=dict(color="black", width=1)),
                                  text=[f"{name} at landing"], textposition="top center",
                                  name=f"{name} at landing"))
-    top = max(8.0, float(np.nanmax(tl.sun["el"])) + 2, float(np.nanmax(hz)) + 2)
+    top = max(8.0, float(np.nanmax(tl.sun["el"])) + 2, float(np.nanmax(hz)) + 2,
+              float(np.nanmax(tl.earth["el"])) + 1)
     top = min(top, 90)
     fig.update_layout(height=480, xaxis=dict(title="direction (azimuth, ° from north)",
                                              range=[0, 360], tickvals=list(range(0, 361, 45)),
@@ -302,6 +322,53 @@ with tab_sky:
                "Dots = where the Sun and Earth are over the chosen period; pale dots are "
                "hidden behind terrain. At the poles the Sun skims the horizon, so a few "
                "metres of terrain decide everything.")
+
+# ---------------- 3D terrain ----------------
+with tab_3d:
+    k3 = st.radio("Site", range(len(sel)), format_func=lambda i: sel[i]["name"],
+                  horizontal=True, key="3d_site")
+    tl = tls[k3]
+    s3 = sel[k3]
+    c1, c2, c3 = st.columns(3)
+    half = c1.select_slider("Area shown (km either side)", [2, 5, 10, 20, 40], value=10)
+    exag = c2.select_slider("Vertical exaggeration", [1, 2, 3, 5], value=2)
+    hrs_max = float((tl.ets[-1] - tl.ets[0]) / 3600.0)
+    hr = c3.slider("Hours after landing (drag to animate the Sun and Earth)", 0.0, hrs_max,
+                   0.0, float(max(1.0, round(hrs_max / 120))))
+    i3 = int(np.clip(np.searchsorted(tl.ets, tl.ets[0] + hr * 3600), 0, len(tl.ets) - 1))
+    with st.spinner("Loading terrain…"):
+        axk, z = terrain_patch(s3["lat"], s3["lon"], half)
+    f3 = go.Figure(go.Surface(x=axk, y=axk, z=z / 1000.0, colorscale="gray", showscale=False,
+                              lighting=dict(ambient=0.35, diffuse=0.9, roughness=0.9),
+                              hovertemplate="%{x:.1f} km E, %{y:.1f} km N<br>"
+                                            "%{z:.2f} km vs site<extra></extra>"))
+    L = half * 0.9
+    for name, d, c, vis in (("Sun", tl.sun, SUN_C, tl.sun["visible"][i3]),
+                            ("Earth", tl.earth, EARTH_C, tl.comm[i3])):
+        a, e = np.radians(d["az"][i3]), np.radians(d["el"][i3])
+        dx, dy, dz = np.sin(a) * np.cos(e), np.cos(a) * np.cos(e), np.sin(e)
+        # direction towards the body (vertical exaggerated like the terrain)
+        f3.add_trace(go.Scatter3d(x=[0, L * dx], y=[0, L * dy], z=[0.002, 0.002 + L * dz * exag],
+                                  mode="lines+text", text=["", f"{name} {'✓' if vis else '✗'}"],
+                                  line=dict(color=c, width=8 if vis else 3,
+                                            dash="solid" if vis else "dash"),
+                                  textfont=dict(color=c, size=14), name=name))
+    f3.add_trace(go.Scatter3d(x=[0], y=[0], z=[0.01], mode="markers",
+                              marker=dict(size=6, color="red"), name="lander"))
+    f3.update_layout(height=620, margin=dict(l=0, r=0, t=10, b=0),
+                     scene=dict(xaxis_title="km east", yaxis_title="km north",
+                                zaxis_title="km", aspectmode="manual",
+                                aspectratio=dict(x=1, y=1, z=max(0.05, exag * (np.ptp(z) / 1000)
+                                                                  / (2 * half)))))
+    show_chart(f3, width="stretch")
+    when = et_to_dt([tl.ets[i3]])[0]
+    st.caption(f"{when:%d %b %Y %H:%M} UTC · Sun {tl.sun['el'][i3]:+.2f}° "
+               f"({'visible' if tl.sun['visible'][i3] else 'behind terrain'}), "
+               f"Earth {tl.earth['el'][i3]:+.2f}° "
+               f"({'visible' if tl.comm[i3] else 'behind terrain'}). "
+               "Lines point towards the Sun and Earth (solid = visible, dashed = hidden). "
+               "Drag to rotate. Terrain from LRO LOLA, heights relative to the lander, "
+               "including the Moon's curvature.")
 
 # ---------------- timeline ----------------
 with tab_time:

@@ -8,7 +8,7 @@ Compare candidate landing sites near the lunar south pole: when is each site in 
 - [x] **Block 2: local horizon from LRO/LOLA terrain** (`terrain.py`): validated against NASA's illumination maps
 - [x] **Block 3: solar power, Earth link budget, windows and time until sunset/Earthset** (`ops.py`)
 - [x] **Block 4: the app** (`app.py`, Streamlit): curated sites, sky view, timeline, best landing dates, move-the-site grid, maps
-- [ ] Block 5: pitch
+- [x] **Block 5: pitch**: `pitch/Lunar_Landing_Site_Navigator.pptx` (+ PDF) and `pitch/demo_script.md`
 
 ## Setup
 ```bash
@@ -178,3 +178,23 @@ sites (they needed a relay satellite) and always visible from the near-side site
 floor never sees the Sun; and at Chandrayaan-3's site the tool puts sunrise on 21 Aug 2023 and
 sunset on 4 Sep 2023 (ISRO landed on 23 Aug at the start of the lunar day and put the lander to
 sleep on 4 Sep).
+
+### Extras
+- **🏔️ 3D terrain tab:** LOLA terrain around the site (2–40 km, adjustable vertical
+  exaggeration, Moon's curvature included) with lines towards the Sun and Earth; drag the
+  "hours after landing" slider to move them through the lunar day.
+- **One lunar day, animated** (`make_lunar_day_gif.py`): IM-2 site from 7 Nov 2026. The Sun
+  climbs out from behind the hills after 7.7 days, then sets again after 23 days.
+
+![lunar day](figures/lunar_day_im-2.gif)
+
+## Block 5: pitch
+`pitch/build_deck.py` builds the 5-slide deck (speaker notes included); `pitch/render.ps1`
+exports PNGs and the PDF with PowerPoint. The story: *"Your launch slipped two weeks"* at the
+IM-2 site (14-day mission, numbers from `pitch_numbers.py`, `results/pitch_story.json`):
+
+| Landing day | Sun visible | Earth visible | Longest night |
+|---|---|---|---|
+| 7 Nov 2026 (planned) | 45 % | 65 % | 7.7 days |
+| 21 Nov (2-week slip) | 69 % | 93 % | 4.4 days |
+| 15 Nov (best day) | 100 % | 100 % | none |
