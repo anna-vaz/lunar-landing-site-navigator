@@ -21,7 +21,7 @@ import terrain as tr
 
 ROOT = Path(__file__).resolve().parent
 SUN_C, EARTH_C, TERRAIN_C = "#f5a623", "#2f7fd8", "#6b6b6b"
-SITE_COLORS = ["#e4572e", "#29335c", "#17bebb", "#a23b72"]
+SITE_COLORS = ["#e4572e", "#b388eb", "#17bebb", "#f2c14e"]
 
 st.set_page_config(page_title="Lunar Landing Site Navigator", page_icon="🌘", layout="wide")
 
@@ -112,6 +112,14 @@ def fmt_hours(h):
 def et_to_dt(ets):
     base = dt.datetime(2000, 1, 1, 12, 0, 0)       # J2000 (TDB); UTC differs by ~69 s
     return [base + dt.timedelta(seconds=float(e) - 69.184) for e in np.atleast_1d(ets)]
+
+
+def show_chart(fig, **kw):
+    """Plot with a legend that is readable in both light and dark Streamlit themes:
+    an opaque light box with dark text."""
+    fig.update_layout(legend=dict(bgcolor="rgba(255,255,255,0.92)", bordercolor="#999",
+                                  borderwidth=1, font=dict(color="#111", size=12)))
+    st.plotly_chart(fig, **kw)
 
 
 def short(name, n=28):
@@ -264,7 +272,7 @@ with tab_sky:
                                  hovertemplate="%{text}<br>az %{x:.1f}°, el %{y:.2f}°"))
         fig.add_trace(go.Scatter(x=a_[~vis], y=e_[~vis], mode="markers",
                                  name=f"{name}: behind terrain",
-                                 marker=dict(size=3, color="#d0d7e2"),
+                                 marker=dict(size=4, color="#a9b1bd"),
                                  text=tt[~vis], hovertemplate="%{text}<br>az %{x:.1f}°, el %{y:.2f}°"))
         fig.add_trace(go.Scatter(x=[d["az"][0]], y=[d["el"][0]], mode="markers+text",
                                  marker=dict(size=16, color=c, symbol="star",
@@ -279,7 +287,7 @@ with tab_sky:
                                                        "NW", "N"]),
                       yaxis=dict(title="height above horizontal (°)", range=[lo_y, top]),
                       legend=dict(orientation="h", y=-0.2), margin=dict(t=30))
-    st.plotly_chart(fig, width="stretch")
+    show_chart(fig, width="stretch")
     st.caption("Grey = the skyline seen from the lander, from LRO laser-altimeter terrain. "
                "Dots = where the Sun and Earth are over the chosen period; pale dots are "
                "hidden behind terrain. At the poles the Sun skims the horizon, so a few "
@@ -310,7 +318,7 @@ with tab_time:
                      ticktext=[short(s["name"], 22) for s in sel], range=[0.4, len(sel) + 0.6],
                      row=1, col=1)
     fig.update_layout(height=640, legend=dict(orientation="h", y=-0.08), margin=dict(t=40))
-    st.plotly_chart(fig, width="stretch")
+    show_chart(fig, width="stretch")
     st.caption("Top: orange = Sun visible, blue = Earth visible (radio contact possible).")
 
 # ---------------- best landing dates ----------------
@@ -349,7 +357,7 @@ with tab_dates:
                               "Sun (worst)": f"{sun_pct[int(np.argmin(score))]:.0f} %"})
         figd.update_yaxes(range=[0, 105])
         figd.update_layout(height=520, legend=dict(orientation="h", y=-0.12), margin=dict(t=40))
-    st.plotly_chart(figd, width="stretch")
+    show_chart(figd, width="stretch")
     st.dataframe(pd.DataFrame(best_rows).set_index("Site"), width="stretch")
     st.caption("'Best' = most sunlight, with Earth contact counted half. Starts at the landing "
                "date in the sidebar.")
@@ -411,7 +419,7 @@ with tab_map:
         fm.update_layout(height=700, width=760, xaxis=dict(range=[-ext, ext], title="km"),
                          yaxis=dict(range=[-ext, ext], title="km"),
                          title="South pole (LRO LOLA terrain, polar view; 0° E is up)")
-        st.plotly_chart(fm, width="content")
+        show_chart(fm, width="content")
     if other_sel or not polar_sel:
         g = global_relief()
         fg = go.Figure(go.Heatmap(z=g, x=np.linspace(0, 360, g.shape[1]),
@@ -431,7 +439,7 @@ with tab_map:
                          yaxis=dict(title="latitude (°)", range=[-90, 90]),
                          title="Whole Moon (LOLA elevation). Near side faces Earth: 270°E → 0° → 90°E; "
                                "between the dotted lines is the far side")
-        st.plotly_chart(fg, width="content")
+        show_chart(fg, width="content")
     for s in sel:
         st.markdown(f"**{s['name']}**: {s.get('note', '')}  \n<small>Coordinates: "
                     f"{s.get('source', '')}</small>", unsafe_allow_html=True)
