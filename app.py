@@ -25,6 +25,16 @@ SITE_COLORS = ["#e4572e", "#b388eb", "#17bebb", "#f2c14e"]
 
 st.set_page_config(page_title="Lunar Landing Site Navigator", page_icon="🌘", layout="wide")
 
+# The app has its own dark theme; ask the Dark Reader browser extension not to recolour it
+# (it turned the plot legends into white text on a light box).
+import streamlit.components.v1 as components
+components.html("""<script>
+const d = window.parent.document;
+if (!d.querySelector('meta[name="darkreader-lock"]')) {
+  const m = d.createElement('meta'); m.name = 'darkreader-lock'; d.head.appendChild(m);
+}
+</script>""", height=0)
+
 
 # ======================================================================================
 # Cached computations
@@ -115,10 +125,10 @@ def et_to_dt(ets):
 
 
 def show_chart(fig, **kw):
-    """Plot with a legend that is readable in both light and dark Streamlit themes:
-    an opaque light box with dark text."""
-    fig.update_layout(legend=dict(bgcolor="rgba(255,255,255,0.92)", bordercolor="#999",
-                                  borderwidth=1, font=dict(color="#111", size=12)))
+    """Plot with a legend readable in light and dark themes and in every browser: a dark
+    box with light text (Firefox can force legend text white, so a light box fails)."""
+    fig.update_layout(legend=dict(bgcolor="rgba(25,28,36,0.92)", bordercolor="#888",
+                                  borderwidth=1, font=dict(color="#f2f2f2", size=12)))
     st.plotly_chart(fig, **kw)
 
 
