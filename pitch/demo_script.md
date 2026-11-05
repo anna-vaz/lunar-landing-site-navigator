@@ -1,6 +1,6 @@
 # Pitch and demo script: Lunar Landing Site Navigator
 
-Total: about **4 minutes** (slides 2 min + live demo 2 min). Ask the Piraeus organisers how
+Total: about **4 minutes** (slides 2 min + live demo 2 min). Ask the Athens organisers (Libre Space Foundation) how
 long pitches are; if it's 3 minutes, skip slide 3 and shorten the demo to steps 1, 3 and 4.
 
 Speaker notes for each slide are also inside the .pptx (View → Notes).

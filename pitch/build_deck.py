@@ -87,7 +87,7 @@ def picture(s, path, x, y, w=None, h=None):
 
 
 def footer(s, n):
-    text(s, 0.5, 7.02, 9, 0.35, "Lunar Landing Site Navigator · NASA Space Apps 2026, Piraeus",
+    text(s, 0.5, 7.02, 9, 0.35, "Lunar Landing Site Navigator · NASA Space Apps 2026, Athens",
          size=11, color=GREY)
     text(s, 12.2, 7.02, 0.7, 0.35, str(n), size=11, color=GREY, align=PP_ALIGN.RIGHT)
 
@@ -107,7 +107,7 @@ text(s, 0.6, 3.0, 5.6, 2.2, [
      ("?", {"size": 24})],
 ])
 text(s, 0.6, 5.6, 5.6, 1.0, [[("Anna Vazaiou", {"bold": True}), ("  ·  Team name", {})],
-                             "NASA Space Apps Challenge 2026 · Piraeus"], size=16, color=GREY)
+                             "NASA Space Apps Challenge 2026 · Athens"], size=16, color=GREY)
 
 # ---------------------------------------------------------------- 2. the problem
 s = slide("""PROBLEM (40 s).
