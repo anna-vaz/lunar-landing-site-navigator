@@ -1,9 +1,7 @@
 spiceypy>=6.0
 numpy
-matplotlib
-requests
-streamlit
-plotly
 pandas
-python-pptx
-playwright
+plotly
+streamlit
+requests
+matplotlib

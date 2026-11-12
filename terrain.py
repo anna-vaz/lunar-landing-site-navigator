@@ -214,7 +214,13 @@ def horizon_profile(dem, lat_deg, lon_deg, obs_height_m=2.0, n_az=720,
     h_site = float(np.asarray(dem.height(lat_deg, lon_deg)).item())
     up = unit_vector(lat_deg, lon_deg)
     P = (R_MOON_M + h_site + obs_height_m) * up
-    pixel = dem.scale_at(lat_deg) if hasattr(dem, "scale_at") else dem.scale
+    if hasattr(dem, "scale_at"):
+        try:
+            pixel = dem.scale_at(lat_deg, lon_deg)
+        except TypeError:
+            pixel = dem.scale_at(lat_deg)
+    else:
+        pixel = dem.scale
     d = ray_distances(pixel, max_dist_m)
     d = d[d >= min_dist_m]
     lat2, lon2 = destination(lat_deg, lon_deg, az, d)            # (n_az, n_d)

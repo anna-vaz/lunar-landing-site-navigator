@@ -39,9 +39,19 @@ if (!d.querySelector('meta[name="darkreader-lock"]')) {
 # ======================================================================================
 # Cached computations
 # ======================================================================================
+import os
+FULL_DATA = ((ROOT / "data" / "lola" / "ldem_80s_40m.img").exists()
+             and os.environ.get("LLSN_WEB") != "1")      # LLSN_WEB=1 forces the web edition
+WEB_EDITION = not FULL_DATA
+
+
 @st.cache_resource
 def get_dem():
-    return tr.CompositeDEM()
+    """Full LOLA maps when they are on disk (laptop), else the compact web-edition layers."""
+    if FULL_DATA:
+        return tr.CompositeDEM()
+    import web_terrain as wt
+    return wt.WebDEM()
 
 
 @st.cache_data(show_spinner=False)
@@ -68,8 +78,9 @@ def make_timeline(site, start_utc, stop_utc, step_h, mast_m, array, link):
 def polar_relief():
     """Shaded relief of the south-polar map, 400 m pixels (computed once)."""
     d = get_dem().polar
-    z = np.asarray(d.dn[::10, ::10], dtype=float) * d.dn_scale
-    gy, gx = np.gradient(z, 400.0)
+    k = max(1, int(round(400.0 / d.scale)))           # ~400 m pixels
+    z = np.asarray(d.dn[::k, ::k], dtype=float) * d.dn_scale
+    gy, gx = np.gradient(z, k * d.scale)
     shade = np.clip(0.5 + 1.5 * (-gx * 0.7 + gy * 0.7) / np.sqrt(1 + gx ** 2 + gy ** 2), 0, 1)
     return shade, z
 
@@ -77,8 +88,8 @@ def polar_relief():
 @st.cache_data(show_spinner=False)
 def global_relief():
     """Elevation (km) at 2 px/deg, plus a light hillshade, for the whole-Moon map."""
-    g = tr.GlobalDEM("ldem_16")
-    z = np.asarray(g.dn[::8, ::8], dtype=float) * g.dn_scale / 1000.0     # 2 px/deg
+    dn = get_dem().glob_dn if WEB_EDITION else tr.GlobalDEM("ldem_16").dn
+    z = np.asarray(dn[::8, ::8], dtype=float) * 0.5 / 1000.0     # 2 px/deg
     gy, gx = np.gradient(z * 1000.0, 15160.0)
     shade = (-gx + gy) / np.sqrt(1 + gx ** 2 + gy ** 2)
     return z + 4.0 * shade
@@ -237,7 +248,10 @@ for col, s, tl, c in zip(cols, sel, tls, SITE_COLORS):
     with col:
         st.markdown(f"<div style='border-left:6px solid {c};padding-left:8px'>"
                     f"<b>{s['name']}</b><br><small>{s['lat']:.3f}°, {s['lon']:.3f}°E · "
-                    f"ground {tl.ground_m:,.0f} m</small></div>", unsafe_allow_html=True)
+                    f"ground {tl.ground_m:,.0f} m"
+                    + (f" · terrain: {get_dem().detail_note(s['lat'], s['lon'])}"
+                       if WEB_EDITION else "")
+                    + "</small></div>", unsafe_allow_html=True)
         up, h = tl.time_until_change(et0, "sun")
         st.metric("☀️ Sun", "Up" if up else "Down",
                   (f"{'sets' if up else 'rises'} in {fmt_hours(h)}" if h is not None else
@@ -477,7 +491,7 @@ with tab_map:
         shade, z = polar_relief()
         d = get_dem().polar
         n = shade.shape[0]
-        half = n / 2 * 0.4      # km
+        half = d.n_lines * d.scale / 2000.0      # km, half-width of the map
         far = max(np.hypot(*[(v - o) * d.scale / 1000 for v, o in
                              zip(d.latlon_to_pix(s["lat"], s["lon"]), (d.l0, d.s0))])
                   for s, _ in polar_sel)

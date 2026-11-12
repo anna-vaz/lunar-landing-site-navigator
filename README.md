@@ -198,3 +198,18 @@ IM-2 site (14-day mission, numbers from `pitch_numbers.py`, `results/pitch_story
 | 7 Nov 2026 (planned) | 45 % | 65 % | 7.7 days |
 | 21 Nov (2-week slip) | 69 % | 93 % | 4.4 days |
 | 15 Nov (best day) | 100 % | 100 % | none |
+
+## Web edition (online hosting)
+The full edition needs 1.1 GB of terrain. `build_web_data.py` cuts an 80 MB set (`data_web/`):
+40 m patches (15 km) around the polar curated sites, 474 m patches around the others, the whole
+south-polar map at 120 m and the global map at 1.9 km. The app uses it automatically when the
+full maps are missing (or with `LLSN_WEB=1`). The SPICE kernels are in the repo so the app
+starts without downloads.
+
+Check (`step_web_check.py`, Sun and Earth visibility over 2027, 2 m mast):
+| Sites | Difference web vs full edition |
+|---|---|
+| 16 curated sites | at most 0.06 percentage points |
+| 60 random custom points, 85–89.8°S | median 0.03 (Sun) / 0.0 (Earth) points; 57 of 60 within 2 points, worst 22 points (Earth, a steep slope where 120 m detail misses a nearby ridge) |
+
+Custom coordinates are labelled "reduced detail" in the web edition.

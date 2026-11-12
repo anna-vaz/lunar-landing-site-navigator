@@ -1,0 +1,70 @@
+{
+ "polar_patches": [
+  {
+   "site": "Ridge between Shackleton and de Gerlache craters",
+   "file": "polar_patch_00.npz"
+  },
+  {
+   "site": "IM-2 Athena (Mons Mouton), landed 2025",
+   "file": "polar_patch_01.npz"
+  },
+  {
+   "site": "Shackleton crater floor (permanent shadow)",
+   "file": "polar_patch_04.npz"
+  }
+ ],
+ "cyl_patches": [
+  {
+   "site": "IM-1 Odysseus (Malapert A), landed 2024",
+   "file": "cyl_patch_02.npz"
+  },
+  {
+   "site": "Chandrayaan-3 Vikram (Statio Shiv Shakti), landed 2023",
+   "file": "cyl_patch_03.npz"
+  },
+  {
+   "site": "Chang'e 4 (Von K\u00e1rm\u00e1n crater), landed 2019",
+   "file": "cyl_patch_05.npz"
+  },
+  {
+   "site": "Chang'e 6 (Apollo basin), landed 2024",
+   "file": "cyl_patch_06.npz"
+  },
+  {
+   "site": "SLIM (near Shioli crater), landed 2024",
+   "file": "cyl_patch_07.npz"
+  },
+  {
+   "site": "Blue Ghost Mission 1 (Mare Crisium), landed 2025",
+   "file": "cyl_patch_08.npz"
+  },
+  {
+   "site": "Chang'e 5 (Mons R\u00fcmker), landed 2020",
+   "file": "cyl_patch_09.npz"
+  },
+  {
+   "site": "Apollo 11 (Mare Tranquillitatis), 1969",
+   "file": "cyl_patch_10.npz"
+  },
+  {
+   "site": "Apollo 12 (Oceanus Procellarum), 1969",
+   "file": "cyl_patch_11.npz"
+  },
+  {
+   "site": "Apollo 14 (Fra Mauro), 1971",
+   "file": "cyl_patch_12.npz"
+  },
+  {
+   "site": "Apollo 15 (Hadley-Apennine), 1971",
+   "file": "cyl_patch_13.npz"
+  },
+  {
+   "site": "Apollo 16 (Descartes highlands), 1972",
+   "file": "cyl_patch_14.npz"
+  },
+  {
+   "site": "Apollo 17 (Taurus-Littrow), 1972",
+   "file": "cyl_patch_15.npz"
+  }
+ ]
+}
