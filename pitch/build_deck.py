@@ -97,7 +97,7 @@ def footer(s, n):
 s = slide("""HOOK (20 s). Start with the question, not with us.
 "Imagine you're a mission planner. Your lander is ready, the landing site at the Moon's south pole is chosen... and the launch slips two weeks. Is your site still good? Will the lander have sunlight for power, and Earth in view to talk home?"
 "Today answering that means juggling JPL Horizons, LRO terrain maps and spreadsheets. We built a tool that answers it in seconds."
-Then: "I'm Anna, a mechanical engineer..." (one line about the team).""")
+Then: "We're team Nokstella: I'm Anna, a mechanical engineer, with Georgios Anagnostopoulos..." (one line about the team).""")
 picture(s, IMG / "sky.png", 6.3, 0.6, 6.6, 5.6)
 text(s, 0.6, 1.3, 5.8, 1.6, "Lunar Landing Site Navigator", size=44, bold=True)
 text(s, 0.6, 3.0, 5.6, 2.2, [
@@ -107,8 +107,8 @@ text(s, 0.6, 3.0, 5.6, 2.2, [
      (" and ", {"size": 24}), ("Earth", {"size": 24, "color": EARTH, "bold": True}),
      ("?", {"size": 24})],
 ])
-text(s, 0.6, 5.35, 5.6, 1.5, [[("Team: ", {}), ("[TEAM NAME]", {"bold": True})],
-                             [("Members: ", {}), ("Anna Vazaiou [+ teammates]", {"bold": True})],
+text(s, 0.6, 5.35, 5.6, 1.5, [[("Team: ", {}), ("Nokstella", {"bold": True})],
+                             [("Members: ", {}), ("Anna Vazaiou, Georgios Anagnostopoulos", {"bold": True})],
                              "Challenge: Lunar Landing Site Navigator · NASA Space Apps 2026, "
                              "Athens"], size=15, color=GREY)
 footer(s, 1)

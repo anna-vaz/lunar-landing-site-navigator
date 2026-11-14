@@ -345,7 +345,7 @@ with tab_3d:
     s3 = sel[k3]
     c1, c2, c3 = st.columns(3)
     half = c1.select_slider("Area shown (km either side)", [2, 5, 10, 20, 40], value=10)
-    exag = c2.select_slider("Vertical exaggeration", [1, 2, 3, 5], value=2)
+    exag = c2.select_slider("Vertical exaggeration", [1, 2, 3, 5], value=3)
     hrs_max = float((tl.ets[-1] - tl.ets[0]) / 3600.0)
     hr = c3.slider("Hours after landing (drag to animate the Sun and Earth)", 0.0, hrs_max,
                    0.0, float(max(1.0, round(hrs_max / 120))))
@@ -370,6 +370,8 @@ with tab_3d:
     f3.add_trace(go.Scatter3d(x=[0], y=[0], z=[0.01], mode="markers",
                               marker=dict(size=6, color="red"), name="lander"))
     f3.update_layout(height=620, margin=dict(l=0, r=0, t=10, b=0),
+                     scene_camera=dict(eye=dict(x=0.95, y=-0.95, z=0.55),
+                                       center=dict(x=0, y=0, z=-0.08)),
                      scene=dict(xaxis_title="km east", yaxis_title="km north",
                                 zaxis_title="km", aspectmode="manual",
                                 aspectratio=dict(x=1, y=1, z=max(0.05, exag * (np.ptp(z) / 1000)
