@@ -1,24 +1,24 @@
 # 30-second demo video: Lunar Landing Site Navigator
 
-**Format (to confirm in the official Project Submission Guide, out 13 Nov):** in past years and in
-other 2026 local events' guides, the "Project Demo" is **either up to 7 slides or a video of at most
-30 seconds**, uploaded publicly (YouTube unlisted/public, Google Drive "anyone with the link").
-English, or English subtitles. Keep the video under 30 s: judges may stop at 30.
+Follows the structure in the official 2026 Project Submission Guide. **Hard limit: 30 s**: longer
+videos make the project ineligible for Global Judging. English voice, or English subtitles.
+Upload to YouTube (public or unlisted) or Google Drive ("anyone with the link"), then test the
+link in a private window. No one under 18 may appear or be heard.
 
-**Recording:** Windows key + Alt + R (Xbox Game Bar) records the browser window, or OBS.
-Browser zoom 125 %, Dark Reader off, sidebar set before recording (sites: Ridge, IM-2 Athena,
-Chandrayaan-3; landing 7 Nov 2026 10:00; look-ahead 1 lunar day). Record the voice separately
-if that's easier and lay it over the video (Clipchamp, built into Windows).
+**Recording:** Windows key + Alt + R (Xbox Game Bar) or OBS; edit in Clipchamp (built into
+Windows). Browser zoom 125 %, Dark Reader off. Sidebar before recording: sites Ridge, IM-2
+Athena, Chandrayaan-3; landing 7 Nov 2026 10:00; look-ahead 1 lunar day.
+**SI marking (required by the guide):** the screen content comes from code written with SI help,
+so keep a small caption in a corner for the whole video: "App code written with SI assistance
+(Claude)".
 
-| Time | On screen | Voice-over (≈ 75 words total) |
-|---|---|---|
-| 0–5 s | Sky view, IM-2: the Sun's path dipping behind the grey skyline | "At the Moon's south pole the Sun barely rises. One hill decides if a lander has power." |
-| 5–11 s | Scroll up to the site cards and the comparison table | "Pick any landing site and date: we show when the Sun and Earth are visible, and how long until sunset." |
-| 11–19 s | Best landing dates tab, mouse on the IM-2 curve at 7, 15, 21 Nov | "Launch slipped two weeks? For IM-2, 7 November gives 45 % sunlight. 15 November gives 100 %." |
-| 19–25 s | 3D terrain tab, drag the time slider once | "All from NASA's laser-altimeter terrain and JPL ephemeris…" |
-| 25–30 s | Slide 5 (checks) or text card with the app link | "…checked against NASA's own maps. Try it at [app link]." |
+| Time | Guide asks for | On screen | Voice-over (~70 words) |
+|---|---|---|---|
+| 0:00–0:02 | Introduce yourself | Title card: name, team, challenge | "Hi, I'm Anna from [team]." |
+| 0:02–0:05 | Lead us in | Sky view, IM-2: the Sun's path dipping behind the skyline | "At the Moon's south pole the Sun barely rises, and one hill decides if a lander has power." |
+| 0:05–0:10 | Name the project | Site cards + comparison table | "Lunar Landing Site Navigator: pick any site and date, see when it has Sun and Earth." |
+| 0:10–0:20 | Describe the idea, NASA data | Best-dates tab (7 → 15 Nov), then 3D terrain with the time slider | "Built on NASA's LRO laser-altimeter terrain and JPL ephemeris. Launch slipped? For IM-2, landing on 15 instead of 7 November takes sunlight from 45 to 100 percent." |
+| 0:20–0:30 | Look into the future | Slide 5 or end card with the app link | "Checked against NASA's own maps, it lets planners re-plan in minutes and shows anyone why the pole is so hard. Try it at [link]." |
 
-Tips
-- Do one take per row, then join the clips: easier than one perfect 30-second take.
-- Captions on screen for the numbers (45 % → 100 %) help judges watching without sound.
-- Final frame stays 2 seconds: app link + GitHub link.
+Tips: record one clip per row and join them; put the key numbers (45 % → 100 %) on screen as
+text for judges watching without sound; end card stays 2 s with the app and GitHub links.
