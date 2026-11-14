@@ -28,7 +28,7 @@ WHITE, GREY = (242, 242, 242), (169, 177, 189)
 SUN, EARTH, GREEN = (245, 166, 35), (74, 155, 240), (92, 201, 139)
 FONT = "C:/Windows/Fonts/segoeui.ttf"
 FONT_B = "C:/Windows/Fonts/segoeuib.ttf"
-SI_NOTE = "App, figures and video made with code written with SI assistance (Claude)"
+SI_NOTE = "Made with SI Assistance"
 
 
 def font(size, bold=False):
@@ -36,7 +36,7 @@ def font(size, bold=False):
 
 
 def si_mark(d):
-    d.text((W - 24, H - 18), SI_NOTE, font=font(22), fill=GREY, anchor="rd")
+    d.text((W - 24, H - 18), SI_NOTE, font=font(26), fill=GREY, anchor="rd")
 
 
 def caption_png(lines, path):
@@ -188,9 +188,9 @@ def still(img, dur, out, overlay=None, zoom=True):
 
 segs = []
 for name, img, dur, ov, zoom in (("s1", WORK / "title.png", 2.5, None, False),
-                                 ("s2", WORK / "sky_f.png", 3.5, WORK / "cap_sky.png", True),
-                                 ("s3", WORK / "overview_f.png", 5.0, WORK / "cap_over.png", True),
-                                 ("s4", WORK / "slip_f.png", 5.5, WORK / "cap_slip.png", True)):
+                                 ("s2", WORK / "sky_f.png", 3.5, WORK / "cap_sky.png", False),
+                                 ("s3", WORK / "overview_f.png", 5.0, WORK / "cap_over.png", False),
+                                 ("s4", WORK / "slip_f.png", 5.5, WORK / "cap_slip.png", False)):
     still(img, dur, WORK / f"{name}.mp4", ov, zoom)
     segs.append(WORK / f"{name}.mp4")
 
@@ -203,7 +203,7 @@ run(["-ss", f"{rot_from + 0.3:.2f}", "-t", "5", "-i", str(video_path), "-i",
      f"pad={W}:{H}:(ow-iw)/2:40:color=0x0e1117,fps={FPS}[b];[b][1:v]overlay=0:0,format=yuv420p",
      "-t", "5", str(WORK / "s5.mp4")])
 segs.append(WORK / "s5.mp4")
-still(WORK / "checks_f.png", 4.0, WORK / "s6.mp4", WORK / "cap_checks.png", True)
+still(WORK / "checks_f.png", 4.0, WORK / "s6.mp4", WORK / "cap_checks.png", False)
 still(WORK / "end.png", 4.0, WORK / "s7.mp4", None, False)
 segs += [WORK / "s6.mp4", WORK / "s7.mp4"]
 
