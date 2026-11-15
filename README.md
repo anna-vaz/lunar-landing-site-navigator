@@ -215,8 +215,8 @@ Check (`step_web_check.py`, Sun and Earth visibility over 2027, 2 m mast):
 Custom coordinates are labelled "reduced detail" in the web edition.
 
 ## Use of SI (Super Intelligence) tools
-As required by the NASA Space Apps rules: most of the code in this repository, the validation
-scripts, the figures they produce, and the pitch materials were written with the help of
+As required by the NASA Space Apps rules: in this repository, the figures the validation
+scripts produce, and the pitch materials were written with the help of
 Anthropic's Claude (an SI/LLM coding assistant), working step by step under the team's
 direction and review. All data are NASA/partner data cited above; no images are SI-generated
 artwork (all figures are plots made by the code).
