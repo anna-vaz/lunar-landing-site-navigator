@@ -1,5 +1,7 @@
 # Lunar Landing Site Navigator (NASA Space Apps 2026, Athens)
 
+**Live app:** https://nokstella-lunar-site-navigator.streamlit.app · Team Nokstella
+
 Compare candidate landing sites near the lunar south pole: when is each site in sunlight
 (power) and when can it see Earth (direct-to-Earth communication)?
 

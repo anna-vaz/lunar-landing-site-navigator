@@ -19,7 +19,7 @@ independent NASA source.
 [YouTube/Drive link to the ≤30 s video]  *or*  [public link to the 5-slide PDF]
 
 ## Link to Final Project
-[https://….streamlit.app]  (live app) · code: https://github.com/anna-vaz/lunar-landing-site-navigator
+https://nokstella-lunar-site-navigator.streamlit.app  (live app) · code: https://github.com/anna-vaz/lunar-landing-site-navigator
 
 ## Detailed Project Description
 **What it does.** Pick up to four sites (16 curated: Apollo 11–17, IM-1, IM-2, Chandrayaan-3,

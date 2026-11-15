@@ -234,7 +234,8 @@ text(s, 7.65, 4.0, 5.0, 1.8, [
     "• Rover routes that stay in sunlight · relay satellites",
 ], size=16)
 text(s, 0.6, 6.3, 12.2, 0.6, "Data: NASA/JPL DE440 ephemeris (SPICE), LRO LOLA terrain, "
-     "NASA LOLA illumination maps. Code: github.com/anna-vaz/lunar-landing-site-navigator",
+     "NASA LOLA illumination maps. App: nokstella-lunar-site-navigator.streamlit.app · Code: "
+     "github.com/anna-vaz/lunar-landing-site-navigator",
      size=12, color=GREY)
 footer(s, 5)
 
